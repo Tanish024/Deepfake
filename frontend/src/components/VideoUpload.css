@@ -1,0 +1,78 @@
+/* Styles for the video upload drag-and-drop zone */
+.upload-container {
+  background: #0d1526;
+  border: 1px solid #1a2540;
+  border-radius: 8px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.drag-area {
+  border: 2px dashed #1a2540;
+  border-radius: 8px;
+  padding: 40px 20px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.drag-area:hover {
+  border-color: #00d4ff;
+  background: rgba(0, 212, 255, 0.05);
+}
+
+.drag-area input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.drag-area p {
+  color: #64748b;
+  margin: 0;
+}
+
+.file-info {
+  color: #00d4ff;
+  font-weight: 500;
+}
+
+.analyze-button {
+  background: #00d4ff;
+  color: #050810;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.analyze-button:hover {
+  background: #00b8e6;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ffd700;
+  font-weight: 500;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}

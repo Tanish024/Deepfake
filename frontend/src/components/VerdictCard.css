@@ -1,0 +1,119 @@
+/* Styles for the verdict result display card */
+.verdict-card {
+  background: #0d1526;
+  border: 1px solid #1a2540;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  transition: all 0.5s ease;
+}
+
+.fake-card {
+  border-color: #ff3c6e;
+  box-shadow: 0 0 30px rgba(255, 60, 110, 0.2);
+}
+
+.real-card {
+  border-color: #00ff88;
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+}
+
+.verdict-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.verdict-header h2 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: 1px;
+}
+
+.fake-text {
+  color: #ff3c6e;
+}
+
+.real-text {
+  color: #00ff88;
+}
+
+.confidence-section {
+  margin-bottom: 25px;
+}
+
+.confidence-label {
+  display: block;
+  margin: 0 0 10px 0;
+  font-weight: 500;
+  color: #e2e8f0;
+}
+
+/* Using native HTML progress element to avoid inline styles */
+.confidence-progress {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: none;
+  background-color: #1a2540;
+}
+
+.confidence-progress::-webkit-progress-bar {
+  background-color: #1a2540;
+  border-radius: 4px;
+}
+
+.confidence-progress::-webkit-progress-value {
+  background: linear-gradient(90deg, #7c3aed, #00d4ff);
+  border-radius: 4px;
+}
+
+/* Fake condition */
+.fake-card .confidence-progress::-webkit-progress-value {
+  background: linear-gradient(90deg, #ff8c00, #ff3c6e);
+}
+.fake-card .confidence-progress::-moz-progress-bar {
+  background: linear-gradient(90deg, #ff8c00, #ff3c6e);
+}
+
+/* Real condition */
+.real-card .confidence-progress::-webkit-progress-value {
+  background: linear-gradient(90deg, #00d4ff, #00ff88);
+}
+.real-card .confidence-progress::-moz-progress-bar {
+  background: linear-gradient(90deg, #00d4ff, #00ff88);
+}
+
+.frames-section {
+  background: rgba(255,255,255,0.03);
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #1a2540;
+}
+
+.frames-section h3 {
+  margin: 0 0 10px 0;
+  font-size: 1rem;
+  color: #e2e8f0;
+}
+
+.frames-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.frame-item {
+  background: rgba(255, 60, 110, 0.15);
+  color: #ff3c6e;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-family: monospace;
+  border: 1px solid rgba(255, 60, 110, 0.3);
+}
