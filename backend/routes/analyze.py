@@ -7,6 +7,7 @@ from flask import Blueprint, request, jsonify
 
 # Import the process_video function from the model package
 from model.pipeline import process_video
+from model.inference import analyze_faces_in_directory
 
 analyze_blueprint = Blueprint("analyze_blueprint", __name__)
 
@@ -50,6 +51,21 @@ def analyze_video():
             directory_contents_list = os.listdir(output_faces_directory)
             saved_faces_count = len(directory_contents_list)
             
+        if saved_faces_count == 0:
+            # Clean up before returning error
+            if os.path.exists(temporary_video_path):
+                os.remove(temporary_video_path)
+            if os.path.exists(output_faces_directory):
+                shutil.rmtree(output_faces_directory)
+            return jsonify({"error": "No face detected"}), 400
+            
+        # Run the PyTorch AI inference on the extracted faces
+        # Using abspath dynamically resolves the correct location of deepfake_model.pth
+        current_dir = os.path.dirname(__file__)
+        model_file_absolute = os.path.abspath(os.path.join(current_dir, "..", "..", "model", "deepfake_model.pth"))
+        
+        response_dictionary = analyze_faces_in_directory(output_faces_directory, model_file_absolute)
+        
         # Clean up temporary video file and extracted faces directory
         if os.path.exists(temporary_video_path):
             os.remove(temporary_video_path)
@@ -57,20 +73,16 @@ def analyze_video():
         if os.path.exists(output_faces_directory):
             shutil.rmtree(output_faces_directory)
             
-        if saved_faces_count == 0:
-            return jsonify({"error": "No face detected"}), 400
+        # Check if inference returned an error
+        if "error" in response_dictionary:
+            return jsonify(response_dictionary), 500
             
         end_handle_time = time.time()
         calculate_time_taken = end_handle_time - start_handle_time
         time_taken_milliseconds = int(calculate_time_taken * 1000)
         
-        response_dictionary = {
-            "verdict": "FAKE",
-            "confidence": 94.2,
-            "frames_analyzed": saved_faces_count,
-            "suspicious_frames": [3, 7, 11],
-            "processing_time_ms": time_taken_milliseconds
-        }
+        # Add the processing time to the final results
+        response_dictionary["processing_time_ms"] = time_taken_milliseconds
         
         return jsonify(response_dictionary), 200
         
