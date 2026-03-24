@@ -1,7 +1,7 @@
 import os
 import cv2
-from preprocess import extract_frames
-from face_detector import crop_face
+from model.preprocess import extract_frames
+from model.face_detector import crop_face
 
 # Processes an entire video, extracts frames, detects faces, and saves them
 def process_video(video_path, output_folder):

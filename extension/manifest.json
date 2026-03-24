@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Deepfake Shield",
+  "version": "1.0.0",
+  "description": "Detects deepfake videos on the current page via the Deepfake Shield backend.",
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": [
+    "http://localhost:5000/*",
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Deepfake Shield"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

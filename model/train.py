@@ -1,9 +1,12 @@
+import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torchvision import transforms, datasets
 from torch.utils.data import DataLoader
 import timm
+
+_THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Builds and returns the EfficientNet model with a 2-class classifier
 def build_model():
@@ -45,14 +48,16 @@ def get_data_loaders(data_directory, batch_size=32):
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ])
         
-        train_path = data_directory + "/train"
-        val_path = data_directory + "/val"
-        
+        # Use os.path.join for cross-platform compatibility
+        train_path = os.path.join(data_directory, "train")
+        val_path = os.path.join(data_directory, "val")
+
         train_dataset = datasets.ImageFolder(root=train_path, transform=image_transformer)
         val_dataset = datasets.ImageFolder(root=val_path, transform=image_transformer)
-        
-        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-        val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+
+        # num_workers speeds up data loading; pin_memory helps with GPU transfers
+        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4, pin_memory=True)
+        val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=4, pin_memory=True)
         
         return train_loader, val_loader
     except Exception as e:
@@ -138,7 +143,8 @@ def train_model(model, train_loader, val_loader, num_epochs=10):
             if validation_accuracy > best_accuracy:
                 best_accuracy = validation_accuracy
                 print("New best model found! Saving...")
-                torch.save(model.state_dict(), "deepfake_model.pth")
+                save_path = os.path.join(_THIS_DIR, "deepfake_model.pth")
+                torch.save(model.state_dict(), save_path)
                 
         print("Training completed. Best accuracy: " + str(best_accuracy) + "%")
         
@@ -147,7 +153,8 @@ def train_model(model, train_loader, val_loader, num_epochs=10):
         print(e)
 
 if __name__ == "__main__":
-    dataset_directory_path = "dataset"
+    # Resolve dataset path relative to this script, not whatever the CWD happens to be
+    dataset_directory_path = os.path.join(_THIS_DIR, "dataset")
     
     deepfake_model = build_model()
     
