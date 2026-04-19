@@ -134,7 +134,8 @@ def analyze_faces_in_directory(faces_directory_path, model_path="../model/deepfa
                 probability_fake = probabilities[_IDX_FAKE].item()
                 probability_real = probabilities[_IDX_REAL].item()
 
-                if probability_fake > 0.5:
+                # Lower threshold: flag a frame as suspicious if fake prob > 0.4
+                if probability_fake > 0.4:
                     fake_votes += 1
                     suspicious_frames_indices.append(index)
                     total_confidence_sum += probability_fake
@@ -142,7 +143,8 @@ def analyze_faces_in_directory(faces_directory_path, model_path="../model/deepfa
                     total_confidence_sum += probability_real
 
         fake_ratio = fake_votes / total_frames
-        verdict = "FAKE" if fake_ratio >= 0.3 else "REAL"
+        # Lower ratio threshold: flag as FAKE if even 15% of frames look suspicious
+        verdict = "FAKE" if fake_ratio >= 0.15 else "REAL"
 
         average_confidence_percentage = round((total_confidence_sum / total_frames) * 100, 1)
 

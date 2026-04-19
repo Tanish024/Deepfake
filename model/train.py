@@ -1,4 +1,6 @@
 import os
+import argparse
+import json
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -66,7 +68,7 @@ def get_data_loaders(data_directory, batch_size=32):
         return None, None
 
 # Executes the PyTorch model training loop
-def train_model(model, train_loader, val_loader, num_epochs=10):
+def train_model(model, train_loader, val_loader, num_epochs=10, output_dir=None):
     """
     Trains the model across the specified number of epochs.
     Calculates the loss, updates the weights, and prints the accuracy.
@@ -90,6 +92,8 @@ def train_model(model, train_loader, val_loader, num_epochs=10):
         loss_function = nn.CrossEntropyLoss()
         optimizer = optim.Adam(model.parameters(), lr=0.001)
         
+        if output_dir is None:
+            output_dir = _THIS_DIR
         best_accuracy = 0.0
         
         for epoch in range(num_epochs):
@@ -143,7 +147,7 @@ def train_model(model, train_loader, val_loader, num_epochs=10):
             if validation_accuracy > best_accuracy:
                 best_accuracy = validation_accuracy
                 print("New best model found! Saving...")
-                save_path = os.path.join(_THIS_DIR, "deepfake_model.pth")
+                save_path = os.path.join(output_dir, "deepfake_model.pth")
                 torch.save(model.state_dict(), save_path)
                 
         print("Training completed. Best accuracy: " + str(best_accuracy) + "%")
@@ -153,13 +157,50 @@ def train_model(model, train_loader, val_loader, num_epochs=10):
         print(e)
 
 if __name__ == "__main__":
-    # Resolve dataset path relative to this script, not whatever the CWD happens to be
-    dataset_directory_path = os.path.join(_THIS_DIR, "dataset")
-    
+    parser = argparse.ArgumentParser(description="Train the Deepfake Shield EfficientNet-B0 model.")
+    parser.add_argument(
+        "--data",
+        type=str,
+        default=os.path.join(_THIS_DIR, "dataset"),
+        help="Path to the dataset root folder containing train/ and val/ subfolders."
+    )
+    parser.add_argument(
+        "--epochs",
+        type=int,
+        default=10,
+        help="Number of training epochs. Default is 10."
+    )
+    parser.add_argument(
+        "--output",
+        type=str,
+        default=_THIS_DIR,
+        help="Directory to save deepfake_model.pth. Defaults to the model/ folder."
+    )
+    args = parser.parse_args()
+
+    print(f"Dataset path : {args.data}")
+    print(f"Epochs       : {args.epochs}")
+    print(f"Output dir   : {args.output}")
+
+    os.makedirs(args.output, exist_ok=True)
+
+    # Save the class mapping alongside the model so inference is always in sync
+    class_map = {"FAKE": 0, "REAL": 1}
+    class_map_path = os.path.join(args.output, "class_to_idx.json")
+    with open(class_map_path, "w") as f:
+        json.dump(class_map, f, indent=2)
+    print(f"Saved class_to_idx.json to {class_map_path}")
+
     deepfake_model = build_model()
-    
+
     if deepfake_model is not None:
-        training_data_loader, validation_data_loader = get_data_loaders(dataset_directory_path)
-        
+        training_data_loader, validation_data_loader = get_data_loaders(args.data)
+
         if training_data_loader is not None:
-            train_model(deepfake_model, training_data_loader, validation_data_loader, num_epochs=10)
+            train_model(
+                deepfake_model,
+                training_data_loader,
+                validation_data_loader,
+                num_epochs=args.epochs,
+                output_dir=args.output
+            )
