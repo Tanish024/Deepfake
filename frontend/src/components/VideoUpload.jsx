@@ -13,7 +13,6 @@ export default function VideoUpload({ onAnalyze }) {
     }
   }
 
-  // Real drag-and-drop handlers
   const handleDragOver = (event) => {
     event.preventDefault()
     setIsDragOver(true)
@@ -37,7 +36,6 @@ export default function VideoUpload({ onAnalyze }) {
     setIsAnalyzing(true)
     try {
       await onAnalyze(selectedFile)
-      // Clear selection after analysis so user can easily run another
       setSelectedFile(null)
       if (inputRef.current) inputRef.current.value = ''
     } finally {
@@ -53,7 +51,7 @@ export default function VideoUpload({ onAnalyze }) {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <p>Drag and drop a video file here, or click to select</p>
+        <p>DROP_TARGET // VIDEO_INPUT_STREAM</p>
         <input
           ref={inputRef}
           type="file"
@@ -65,19 +63,22 @@ export default function VideoUpload({ onAnalyze }) {
 
       {selectedFile && (
         <div className="file-info">
-          <p>Selected File: {selectedFile.name}</p>
+          <p>LOADED_PAYLOAD: {selectedFile.name}</p>
         </div>
       )}
 
       {selectedFile && !isAnalyzing && (
         <button className="analyze-button" onClick={handleAnalyzeClick}>
-          Analyze Video
+          BREACH_PROTOCOL
         </button>
       )}
 
       {isAnalyzing && (
         <div className="loading-state">
-          <p className="loading-text">Analyzing frames…</p>
+          <p className="loading-text glitch-text">EXTRACTING_FRAMES // NEURAL_NET_ENGAGED</p>
+          <div className="progress-bar-container">
+            <div className="progress-bar-fill"></div>
+          </div>
         </div>
       )}
     </div>

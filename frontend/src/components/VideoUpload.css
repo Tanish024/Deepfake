@@ -1,79 +1,163 @@
-/* Styles for the video upload drag-and-drop zone */
 .upload-container {
-  background: #0d1526;
-  border: 1px solid #1a2540;
-  border-radius: 8px;
-  padding: 30px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  gap: 1.5rem;
+  position: relative;
 }
 
 .drag-area {
-  border: 2px dashed #1a2540;
-  border-radius: 8px;
-  padding: 40px 20px;
-  width: 100%;
-  box-sizing: border-box;
-  text-align: center;
+  background-color: var(--surface);
+  border: 1px solid var(--cyber-red-dim);
+  padding: 4rem 2rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
   position: relative;
-  transition: all 0.3s ease;
+  overflow: hidden;
+  clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
 }
 
-.drag-area:hover,
-.drag-area.drag-over {
-  border-color: #00d4ff;
-  background: rgba(0, 212, 255, 0.05);
+.drag-area::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--surface),
+    var(--surface) 10px,
+    var(--surface-high) 10px,
+    var(--surface-high) 20px
+  );
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.drag-area > * {
+  position: relative;
+  z-index: 1;
+}
+
+.drag-area:hover, .drag-area.drag-over {
+  border-color: var(--cyber-red);
+  background-color: var(--surface-high);
+}
+
+.drag-area p {
+  color: var(--cyber-red);
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  pointer-events: none;
 }
 
 .drag-area input[type="file"] {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0; width: 100%; height: 100%;
   opacity: 0;
   cursor: pointer;
-}
-
-.drag-area p {
-  color: #64748b;
-  margin: 0;
+  z-index: 5;
 }
 
 .file-info {
-  color: #00d4ff;
-  font-weight: 500;
+  background-color: var(--surface-high);
+  padding: 1rem;
+  border-left: 5px solid var(--cyber-red);
+  text-align: left;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+}
+
+.file-info p {
+  margin: 0;
+  color: var(--text-main);
+  text-transform: uppercase;
 }
 
 .analyze-button {
-  background: #00d4ff;
-  color: #050810;
-  border: none;
-  border-radius: 4px;
-  padding: 12px 24px;
-  font-size: 1rem;
-  font-weight: bold;
+  background-color: var(--cyber-red-dim);
+  color: var(--bg-void);
+  border: 1px solid var(--cyber-red);
+  padding: 1rem 2rem;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.2s ease;
+  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+  position: relative;
+}
+
+.analyze-button::after {
+  content: 'INITIATE';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  opacity: 0;
+  transition: 0.2s;
 }
 
 .analyze-button:hover {
-  background: #00b8e6;
+  background-color: var(--cyber-red);
+  color: #fff;
+  box-shadow: 0 0 15px var(--cyber-red-glow);
+}
+
+.analyze-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 .loading-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #ffd700;
-  font-weight: 500;
-  animation: pulse 1.5s infinite;
+  background-color: var(--surface);
+  padding: 2rem;
+  border: 1px solid var(--cyber-red);
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes pulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
+.loading-state::before {
+  content: '01011001 01101111 01110101 00100000 01100001 01110010 01100101 00100000 01110111 01100001 01110100 01100011 01101000 01101001 01101110 01100111';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  color: var(--cyber-red-dim);
+  font-family: monospace;
+  font-size: 0.8rem;
+  word-wrap: break-word;
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.loading-text {
+  color: var(--cyber-red);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  position: relative;
+  z-index: 1;
+}
+
+.progress-bar-container {
+  height: 10px;
+  background-color: var(--surface-high);
+  width: 100%;
+  position: relative;
+  border: 1px solid var(--cyber-red-dim);
+  z-index: 1;
+}
+
+.progress-bar-fill {
+  position: absolute;
+  top: 0; left: 0; height: 100%;
+  width: 20%;
+  background-color: var(--cyber-red);
+  box-shadow: 0 0 10px var(--cyber-red);
+  animation: scan-rapid 1s infinite linear;
+}
+
+@keyframes scan-rapid {
+  0% { left: -20%; }
+  100% { left: 100%; }
 }

@@ -4,12 +4,10 @@ import VideoUpload from './components/VideoUpload'
 import VerdictCard from './components/VerdictCard'
 import './App.css'
 
-// Main application component connecting the video upload and verdict display
 export default function App() {
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
 
-  // Handles the video upload process internally updating state
   const handleAnalyze = async (file) => {
     setError(null)
     setResult(null)
@@ -19,7 +17,7 @@ export default function App() {
     } catch (err) {
       let errorMessage = err.message
       if (!errorMessage) {
-          errorMessage = 'Failed to analyze video.'
+          errorMessage = 'CRITICAL FAILURE: ANALYSIS ABORTED'
       }
       setError(errorMessage)
     }
@@ -27,17 +25,23 @@ export default function App() {
 
   return (
     <div className="app-container">
-      <header className="app-header">
-        <h1>Deepfake Shield 🛡</h1>
-        <p>Real-time deepfake video detection</p>
+      <div className="cyber-fluff-top pulsing">
+        <span>SYS.CORE.OVR // SECURE TERMINAL</span>
+        <span className="barcode">||| |||| | || |||||</span>
+        <span>ACCESS: GRANTED</span>
+      </div>
+
+      <header className="app-header glitch-text">
+        <h1>DEEPFAKE_SHIELD</h1>
+        <p>FORENSIC VIDEO ANALYSIS v2.4</p>
       </header>
 
       <main className="app-main">
         <VideoUpload onAnalyze={handleAnalyze} />
         
         {error && (
-          <div className="error-message">
-            <p>Error: {error}</p>
+          <div className="error-message glitch-text">
+            <p>WARNING: {error}</p>
           </div>
         )}
 
@@ -49,6 +53,12 @@ export default function App() {
           />
         )}
       </main>
+
+      <footer className="app-footer">
+        <span>ROOT@SYNTHETIC_ORACLE:~#</span>
+        <span>Contact: <a href="mailto:tanishkhatri002@gmail.com" className="footer-link">tanishkhatri002@gmail.com</a></span>
+        <span>STATUS: ONLINE</span>
+      </footer>
     </div>
   )
 }
