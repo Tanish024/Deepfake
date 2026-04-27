@@ -1,12 +1,13 @@
 # Use an official Python runtime as a parent image
-FROM python:3.10-slim
+# Pinned to bullseye for stable package availability (libgl1-mesa-glx)
+FROM python:3.10-slim-bullseye
 
 # Set the working directory in the container
 WORKDIR /app
 
 # Install system dependencies required for OpenCV
 RUN apt-get update && apt-get install -y \
-    libgl1 \
+    libgl1-mesa-glx \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
@@ -26,4 +27,5 @@ RUN pip install gunicorn
 EXPOSE 7860
 
 # Run the backend server using Gunicorn, binding to 0.0.0.0:7860
-CMD ["gunicorn", "--bind", "0.0.0.0:7860", "app:app", "--timeout", "120"]
+# Use --preload so the factory is called before workers fork
+CMD ["gunicorn", "--bind", "0.0.0.0:7860", "app:create_app()", "--timeout", "120", "--preload"]
