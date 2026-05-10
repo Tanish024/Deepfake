@@ -143,8 +143,8 @@ def analyze_faces_in_directory(faces_directory_path, model_path="../model/deepfa
                     total_confidence_sum += probability_real
 
         fake_ratio = fake_votes / total_frames
-        # Flag as FAKE if 50%+ of frames are suspicious (balanced model)
-        verdict = "FAKE" if fake_ratio >= 0.50 else "REAL"
+        # Flag as FAKE if 30%+ of frames are suspicious (fakes often have real-looking frames)
+        verdict = "FAKE" if fake_ratio >= 0.30 else "REAL"
 
         average_confidence_percentage = round((total_confidence_sum / total_frames) * 100, 1)
 
