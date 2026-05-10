@@ -1,9 +1,8 @@
 // Analyzes a video by posting it to the Flask backend endpoint
 export const analyzeVideo = async (file) => {
-  let apiUrl = import.meta.env.VITE_API_URL
-  if (!apiUrl) {
-    apiUrl = 'http://localhost:5000'
-  }
+  // In production (Docker/HF), VITE_API_URL is not set, so we use '' (same-origin).
+  // For local dev with `npm run dev`, set VITE_API_URL=http://localhost:5000 in frontend/.env
+  const apiUrl = import.meta.env.VITE_API_URL || ''
   
   const formData = new FormData()
   formData.append('video', file)

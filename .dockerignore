@@ -1,21 +1,36 @@
-# Python
+# Python virtual environments (root-level and nested)
+.venv/
+backend/.venv/
+backend/env/
+backend/venv/
+
+# Python cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
-backend/.venv/
-backend/env/
-backend/venv/
 
 # Node.js
 frontend/node_modules/
 frontend/.npm/
 
+# Frontend env (must NOT bake localhost:5000 into Docker build)
+frontend/.env
+
+# Frontend local build output (Docker builds its own)
+frontend/dist/
+
 # Git
 .git
 .gitignore
+.gitattributes
+
+# Agent / IDE
+.agent/
+.vscode/
 
 # OS generated files
 .DS_Store
 Thumbs.db
+desktop.ini
